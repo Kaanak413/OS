@@ -3,6 +3,11 @@
         "types.h": "c",
         "unistd.h": "c",
         "wait.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "array": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "utility": "cpp",
+        "math.h": "c"
     }
 }
