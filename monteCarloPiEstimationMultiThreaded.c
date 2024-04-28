@@ -11,13 +11,11 @@
 #include <stdbool.h>
 #endif
 const int  INTERVAL =  10000;
-const int numberOfThreads = 4;
+const int numberOfThreads = 8;
 
-const int numberOfInputs = 1000;
 pthread_t tid[numberOfThreads]; 
 int circle_points = 0, square_points = 0;
-double rand_x, rand_y,pi;
-int lastInput = 0;
+double pi;
 
 pthread_mutex_t lock; 
 
@@ -29,20 +27,23 @@ bool calculateIfItIsInside(double x,double y);
 void *workerGenerateThread(void *param)
 {
     
-
-    pthread_mutex_lock(&lock);
-    double x = calcRandom();
-    double y = calcRandom();
-    if (calculateIfItIsInside(x,y))
+    while (!(square_points>=INTERVAL*INTERVAL))
     {
+         pthread_mutex_lock(&lock);
+        double x = calcRandom();
+        double y = calcRandom();
+        if (calculateIfItIsInside(x,y))
+         {
         circle_points++;
         square_points++;
+        }
+        else
+        {   
+            square_points++;
+        }
+         pthread_mutex_unlock(&lock);
     }
-    else
-    {   
-        square_points++;
-    }
-    pthread_mutex_unlock(&lock);
+    
     return NULL; 
 
 } 
@@ -85,12 +86,11 @@ int main(void)
             printf("\nThread can't be created :[]"); 
         i++; 
     }
-    bool condition = square_points>=INTERVAL*INTERVAL;
-    while(!condition)
-    {
-         
-        condition = square_points>=INTERVAL*INTERVAL; 
-    }
+    // bool condition = square_points>=INTERVAL*INTERVAL;
+    // while(!condition)
+    // {
+    //     condition = square_points>=INTERVAL*INTERVAL; 
+    // }
    
         for (i=0; i<numberOfThreads; i++)
         {
